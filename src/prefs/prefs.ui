@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <requires lib="libadwaita" version="1.5"/>
+  <template class="PhoshHomeAssistantQuickSettingPrefs" parent="AdwPreferencesDialog">
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Home Assistant</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Connection</property>
+            <property name="description" translatable="yes">Configure your Home Assistant server connection</property>
+            <child>
+              <object class="AdwEntryRow" id="url_row">
+                <property name="title" translatable="yes">Server URL</property>
+                <property name="placeholder-text" translatable="yes">http://homeassistant.local:8123</property>
+                <signal name="apply" handler="on_url_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow" id="token_row">
+                <property name="title" translatable="yes">Access Token</property>
+                <property name="placeholder-text" translatable="yes">Long-lived access token</property>
+                <property name="show-apply-button">1</property>
+                <signal name="apply" handler="on_token_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+              </object>
+            </child>
+            <child>
+              <object class="AdwEntryRow" id="entity_row">
+                <property name="title" translatable="yes">Entity ID</property>
+                <property name="placeholder-text" translatable="yes">light.living_room</property>
+                <signal name="apply" handler="on_entity_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

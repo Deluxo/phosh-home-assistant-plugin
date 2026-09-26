@@ -1,0 +1,12 @@
+[Plugin]
+# Translators: This is an internal id, no need to translate it
+Id=@name@
+Name=Home Assistant Quick Setting
+Types=quick-setting;
+Comment=Toggle Home Assistant devices from the quick settings panel
+Plugin=@plugins_dir@/libphosh-plugin-@name@.so
+Icon=home-assistant-quick-setting
+
+[Prefs]
+Id=@name@-prefs
+Plugin=@plugin_prefs_dir@/libphosh-plugin-prefs-@name@.so
