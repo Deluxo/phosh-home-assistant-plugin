@@ -69,6 +69,7 @@ plugin_prefs_config_h = configure_file(
 )
 
 prefs_deps = [
+  dependency('phosh-plugins'),
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>=1.5'),
 ]
