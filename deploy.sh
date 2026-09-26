@@ -12,7 +12,7 @@ setup_deps() {
     meson ninja-build gcc pkg-config \
     phosh-dev libphosh-0.45-dev \
     libsoup-3.0-dev libadwaita-1-dev libgtk-4-dev libgtk-3-dev \
-    libhandy-1-dev gsettings-desktop-schemas-dev glib2.0-dev
+    libhandy-1-dev gsettings-desktop-schemas-dev libglib2.0-dev
 }
 
 restart_phosh() {
