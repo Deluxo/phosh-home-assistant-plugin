@@ -24,7 +24,13 @@ if [ "$1" = "--setup" ]; then setup_deps; exit 0; fi
 if [ "$1" = "--restart-only" ]; then restart_phosh; exit 0; fi
 
 echo "==> building"
-if [ ! -f build/build.ninja ]; then meson setup build; fi
+if [ ! -f build/build.ninja ]; then
+  meson setup --prefix=/usr build
+elif grep -q "/usr/local" build/meson-private/cmd_line.txt 2>/dev/null; then
+  echo "==> dropping stale build dir (was configured with /usr/local prefix)"
+  rm -rf build
+  meson setup --prefix=/usr build
+fi
 ninja -C build
 echo "==> installing (sudo will prompt)"
 sudo ninja -C build install
