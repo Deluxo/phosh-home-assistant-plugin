@@ -12,15 +12,14 @@ No .deb packaging yet — fast iteration only.
 - Installs to system plugin dirs from `phosh-plugins.pc`, plus gsettings schema
 - Source lives here, builds natively ON device (avoids cross-compile)
 
-## Quick iteration
+## Quick iteration (run on the phone, no SSH)
 ```bash
-./deploy.sh --setup   # once: install build deps on device (asks sudo pw)
-./deploy.sh           # every iteration: sync, build, install, restart phosh
+cd /mnt/msdcard/dev/phosh-home-assistant-plugin
+./deploy.sh --setup   # once: install build deps (asks sudo pw)
+./deploy.sh           # every iteration: build, install, restart phosh
 ./deploy.sh --restart-only
-DEVICE=otherhost ./deploy.sh   # override target
+./uninstall.sh        # revert: remove plugin files, restart phosh
 ```
-
-Target: `flx1sp:/mnt/msdcard/dev/phosh-home-assistant-plugin`
 
 ## Configure on device
 ```bash
