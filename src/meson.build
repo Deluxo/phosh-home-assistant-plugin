@@ -8,6 +8,7 @@ plugin_deps = [
   dependency('gio-unix-2.0'),
   dependency('gtk+-3.0'),
   dependency('libsoup-3.0'),
+  dependency('json-glib-1.0'),
 ]
 
 plugin_resources = gnome.compile_resources(
@@ -72,6 +73,8 @@ prefs_deps = [
   dependency('phosh-plugins'),
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>=1.5'),
+  dependency('libsoup-3.0'),
+  dependency('json-glib-1.0'),
 ]
 
 prefs_resources = gnome.compile_resources(

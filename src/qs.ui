@@ -13,17 +13,19 @@
   <object class="PhoshStatusPage" id="status_page">
     <property name="visible">1</property>
     <property name="title" translatable="yes">Home Assistant</property>
-    <property name="content">placeholder</property>
+    <property name="content">scrolled</property>
     <property name="footer">footer</property>
   </object>
-  <object class="PhoshStatusPagePlaceholder" id="placeholder">
+  <object class="GtkScrolledWindow" id="scrolled">
     <property name="visible">1</property>
-    <property name="icon-name">home-assistant-quick-setting-symbolic</property>
-    <property name="extra-widget">label</property>
-  </object>
-  <object class="GtkLabel" id="label">
-    <property name="visible">1</property>
-    <property name="label" translatable="yes">Toggle Home Assistant devices</property>
+    <property name="hscrollbar-policy">never</property>
+    <property name="propagate-natural-height">1</property>
+    <child>
+      <object class="GtkListBox" id="entity_list">
+        <property name="visible">1</property>
+        <property name="selection-mode">none</property>
+      </object>
+    </child>
   </object>
   <object class="GtkButton" id="footer">
     <property name="visible">1</property>
@@ -33,7 +35,7 @@
       <object class="GtkLabel">
         <property name="visible">1</property>
         <property name="ellipsize">end</property>
-        <property name="label" translatable="yes">Open Plugin Settings</property>
+        <property name="label" translatable="yes">Open Home Assistant</property>
       </object>
     </child>
   </object>

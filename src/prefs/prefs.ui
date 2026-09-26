@@ -9,27 +9,82 @@
         <child>
           <object class="AdwPreferencesGroup">
             <property name="title" translatable="yes">Connection</property>
-            <property name="description" translatable="yes">Configure your Home Assistant server connection</property>
+            <property name="description" translatable="yes">Server URL and long-lived access token (HA profile page)</property>
             <child>
               <object class="AdwEntryRow" id="url_row">
                 <property name="title" translatable="yes">Server URL</property>
-                <property name="placeholder-text" translatable="yes">http://homeassistant.local:8123</property>
+                <property name="show-apply-button">1</property>
                 <signal name="apply" handler="on_url_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
               </object>
             </child>
             <child>
-              <object class="AdwEntryRow" id="token_row">
+              <object class="AdwPasswordEntryRow" id="token_row">
                 <property name="title" translatable="yes">Access Token</property>
-                <property name="placeholder-text" translatable="yes">Long-lived access token</property>
                 <property name="show-apply-button">1</property>
                 <signal name="apply" handler="on_token_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Main entity</property>
+            <property name="description" translatable="yes">The entity the quick-setting tile toggles directly</property>
             <child>
-              <object class="AdwEntryRow" id="entity_row">
-                <property name="title" translatable="yes">Entity ID</property>
-                <property name="placeholder-text" translatable="yes">light.living_room</property>
-                <signal name="apply" handler="on_entity_apply" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+              <object class="AdwActionRow" id="load_row">
+                <property name="title" translatable="yes">Available entities</property>
+                <property name="subtitle" translatable="yes">Not loaded yet</property>
+                <child type="suffix">
+                  <object class="GtkSpinner" id="load_spinner">
+                    <property name="visible">0</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+                <child type="suffix">
+                  <object class="GtkButton" id="load_button">
+                    <property name="label" translatable="yes">Load</property>
+                    <property name="valign">center</property>
+                    <property name="css-classes">pill</property>
+                    <signal name="clicked" handler="on_load_clicked" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwComboRow" id="entity_combo">
+                <property name="title" translatable="yes">Entity</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup" id="visibility_group">
+            <property name="title" translatable="yes">Shown in quick settings</property>
+            <property name="description" translatable="yes">Choose which entities appear in the tile's list</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Connection test</property>
+            <property name="description" translatable="yes">Check that the server URL and access token work</property>
+            <child>
+              <object class="AdwActionRow" id="test_row">
+                <property name="title" translatable="yes">Server status</property>
+                <property name="subtitle" translatable="yes">Not tested yet</property>
+                <child type="suffix">
+                  <object class="GtkSpinner" id="test_spinner">
+                    <property name="visible">0</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+                <child type="suffix">
+                  <object class="GtkButton" id="test_button">
+                    <property name="label" translatable="yes">Test connection</property>
+                    <property name="valign">center</property>
+                    <property name="css-classes">pill</property>
+                    <signal name="clicked" handler="on_test_clicked" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
