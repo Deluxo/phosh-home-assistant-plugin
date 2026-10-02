@@ -13,19 +13,20 @@
   <object class="PhoshStatusPage" id="status_page">
     <property name="visible">1</property>
     <property name="title" translatable="yes">Home Assistant</property>
-    <property name="content">scrolled</property>
+    <property name="content">entity_list</property>
     <property name="footer">footer</property>
   </object>
-  <object class="GtkScrolledWindow" id="scrolled">
+  <!-- No inner scrolled window: phosh's panel (PhoshSettings) already scrolls
+   * the whole quick-settings column, same as the wifi/bt status pages. An
+   * inner GtkScrolledWindow with propagate-natural-height never overflows, so
+   * it shows no scrollbar and swallows the drag gesture. -->
+  <object class="GtkListBox" id="entity_list">
     <property name="visible">1</property>
-    <property name="hscrollbar-policy">never</property>
-    <property name="propagate-natural-height">1</property>
-    <child>
-      <object class="GtkListBox" id="entity_list">
-        <property name="visible">1</property>
-        <property name="selection-mode">none</property>
-      </object>
-    </child>
+    <property name="selection-mode">none</property>
+    <property name="hexpand">1</property>
+    <style>
+      <class name="content"/>
+    </style>
   </object>
   <object class="GtkButton" id="footer">
     <property name="visible">1</property>
