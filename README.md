@@ -21,6 +21,9 @@ Settings live in GSettings under
 Makefile                  on-device fasttrack workflow (deploy/test entry point)
 meson.build               top-level meson project
 src/                      plugin + prefs sources, .ui templates, gschema, icon
+ci/build-deb.sh           builds the arm64 .deb (Debian trixie container)
+packaging/                postinst/postrm scripts for the .deb
+.github/workflows/        GitHub Actions: build .deb as artifact / release
 attic/                    dead code, kept for reference only
 .envrc / shell.nix        nix dev shell: make + ssh + tar + python3
 ```
@@ -73,6 +76,33 @@ cd /mnt/msdcard/dev/phosh-home-assistant-plugin && make local
 Note: `local` intentionally fails off-device — it requires the toolchain from
 `make setup`. After deploying, check that **Home Assistant** appears in the
 quick-settings panel.
+
+## CI: building the .deb (GitHub Actions)
+
+The `build-deb.yml` workflow builds a **native arm64 .deb** on every push to
+`main`, on tags, on PRs and via manual dispatch. The build runs in a Debian
+trixie (arm64) container — emulated on the x86 runner — so the result is a
+real ARM64 package linked against Debian's `libphosh-0.45` (same SONAME as
+on Phosphan/postmarketOS phones). No cross-compilation, no postmarketOS apt
+repo needed.
+
+- **Artifact**: each run uploads
+  `phosh-plugin-home-assistant-quick-setting-arm64` (the `.deb`).
+- **Release**: tag pushes (`v*`) additionally publish the `.deb` as a
+  GitHub Release asset.
+- Versioning: an exact git tag becomes the package version (`v1.0.1` →
+  `1.0.1-1`); other CI builds get `<meson-version>-1~g<sha7>`.
+
+Install on the phone (over adb, scp or ssh):
+
+```sh
+apt install ./phosh-plugin-home-assistant-quick-setting_*_arm64.deb
+# schema is compiled automatically by postinst; then restart phosh if it's running:
+sudo systemctl restart phosh
+```
+
+The same script runs on any Debian trixie ARM machine
+(`ci/build-deb.sh`), e.g. a self-hosted ARM runner for faster builds.
 
 ## Testing
 

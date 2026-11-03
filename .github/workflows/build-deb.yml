@@ -1,0 +1,62 @@
+# Builds the phosh Home Assistant quick-setting plugin as an arm64 .deb.
+#
+# The build runs in a native Debian trixie (arm64) container — emulated via
+# qemu on the x86 runner. That produces real ARM64 binaries linked against
+# Debian's own phosh 0.46 / libphosh-0.45 packages, i.e. the same SONAME as
+# on Phosphan/postmarketOS phones, so the .deb works on the device.
+#
+# If you later run a self-hosted ARM runner, point `runs-on` at its label
+# and invoke `ci/build-deb.sh` directly instead of docker (it is
+# distribution-agnostic Debian trixie).
+name: Build plugin .deb (arm64)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # for `gh release create` on tag builds
+
+jobs:
+  build-deb:
+    name: arm64 .deb
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build .deb in native arm64 container
+        run: |
+          docker run --rm \
+            --platform linux/arm64 \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -e PKG_GHA_SHA="${{ github.sha }}" \
+            -v "${GITHUB_WORKSPACE}:/src" -w /src \
+            debian:trixie \
+            sh ci/build-deb.sh
+
+      - name: Show built package
+        run: |
+          ls -l dist/
+          dpkg-deb --info dist/*.deb
+          dpkg-deb -c dist/*.deb
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phosh-plugin-home-assistant-quick-setting-arm64
+          path: dist/*.deb
+          if-no-files-found: error
+
+      - name: Publish release (tag builds only)
+        if: startsWith(github.ref, 'tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Home Assistant plugin $GITHUB_REF_NAME" \
+            --notes "Phosh quick-setting plugin for Home Assistant (arm64 .deb). Install with \`apt install ./<package>.deb\` on the phone." \
+            dist/*.deb

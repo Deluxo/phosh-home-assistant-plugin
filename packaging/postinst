@@ -1,0 +1,8 @@
+#!/bin/sh
+# Compile the gsettings schemas after install so the plugin's GSettings
+# schema (mobi.phosh.plugins.home-assistant-quick-setting) is active.
+set -e
+if [ -d /usr/share/glib-2.0/schemas ]; then
+  glib-compile-schemas /usr/share/glib-2.0/schemas
+fi
+exit 0

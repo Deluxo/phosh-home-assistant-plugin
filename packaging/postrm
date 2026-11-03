@@ -1,0 +1,12 @@
+#!/bin/sh
+# Recompile the gsettings schemas on removal so our schema drops out of
+# gschemas.compiled (mirrors `make uninstall`).
+set -e
+case "$1" in
+  remove|deconfigure)
+    if [ -d /usr/share/glib-2.0/schemas ]; then
+      glib-compile-schemas /usr/share/glib-2.0/schemas
+    fi
+    ;;
+esac
+exit 0
