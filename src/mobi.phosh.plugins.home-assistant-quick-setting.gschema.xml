@@ -25,12 +25,20 @@
         The entity ID of the device to toggle, e.g. light.living_room
       </description>
     </key>
-    <key name="hidden-entities" type="as">
+    <key name="entities" type="as">
       <default>[]</default>
-      <summary>Hidden entities</summary>
+      <summary>Entities shown in quick settings</summary>
       <description>
-        Entity IDs hidden from the quick-setting entity list.
-        Everything else is shown.
+        Ordered entity IDs to show as buttons in the status page.
+        Empty means show every entity from the cached Home Assistant list.
+      </description>
+    </key>
+    <key name="cache" type="s">
+      <default>''</default>
+      <summary>Cached Home Assistant entities</summary>
+      <description>
+        JSON snapshot of the last fetched entity list. Used to render
+        the quick-setting list offline and to avoid unnecessary requests.
       </description>
     </key>
   </schema>

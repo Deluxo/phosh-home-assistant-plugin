@@ -13,8 +13,26 @@
   <object class="PhoshStatusPage" id="status_page">
     <property name="visible">1</property>
     <property name="title" translatable="yes">Home Assistant</property>
+    <property name="header">refresh_button</property>
     <property name="content">entity_list</property>
     <property name="footer">footer</property>
+  </object>
+  <!-- Same pattern as phosh's wifi status page: a flat button in the title
+       * row (via the page's header property) that triggers one fetch. -->
+  <object class="GtkButton" id="refresh_button">
+    <property name="visible">1</property>
+    <property name="valign">center</property>
+    <property name="focus-on-click">0</property>
+    <signal name="clicked" handler="on_refresh_clicked" object="PhoshHomeAssistantQuickSetting" swapped="yes"/>
+    <style>
+      <class name="flat"/>
+    </style>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">1</property>
+        <property name="icon-name">view-refresh-symbolic</property>
+      </object>
+    </child>
   </object>
   <!-- No inner scrolled window: phosh's panel (PhoshSettings) already scrolls
    * the whole quick-settings column, same as the wifi/bt status pages. An

@@ -27,25 +27,25 @@ deploy: sync
 local:
 	set -e; \
 	if [ ! -f build/build.ninja ]; then \
-	  meson setup --prefix=/usr build; \
+	  meson setup --reconfigure --prefix=/usr build; \
 	elif grep -q /usr/local build/meson-private/cmd_line.txt 2>/dev/null; then \
 	  echo "dropping stale build dir (was configured with /usr/local prefix)"; \
-	  rm -rf build && meson setup --prefix=/usr build; \
+	  rm -rf build && meson setup --reconfigure --prefix=/usr build; \
 	fi; \
 	ninja -C build; \
 	echo "installing (sudo will prompt)"; \
 	sudo ninja -C build install; \
 	sudo glib-compile-schemas /usr/share/glib-2.0/schemas; \
-	sudo systemctl restart phosh; \
+	#sudo systemctl restart phosh; \
 	echo "done. Check quick-settings panel for Home Assistant."
 
 setup:
-	$(SSH) 'sudo apt update && sudo apt install -y \
+	sudo apt update && sudo apt install -y \
 	  make meson ninja-build gcc pkg-config \
 	  phosh-dev libphosh-0.45-dev \
 	  libsoup-3.0-dev libadwaita-1-dev libgtk-4-dev libgtk-3-dev \
 	  libjson-glib-dev \
-	  libhandy-1-dev gsettings-desktop-schemas-dev libglib2.0-dev'
+	  libhandy-1-dev gsettings-desktop-schemas-dev libglib2.0-dev
 
 sync:
 	tar czf - --exclude=build --exclude=.git . \

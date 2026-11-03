@@ -33,7 +33,7 @@
             <child>
               <object class="AdwActionRow" id="load_row">
                 <property name="title" translatable="yes">Available entities</property>
-                <property name="subtitle" translatable="yes">Not loaded yet</property>
+                <property name="subtitle" translatable="yes">Using cached list</property>
                 <child type="suffix">
                   <object class="GtkSpinner" id="load_spinner">
                     <property name="visible">0</property>
@@ -42,7 +42,7 @@
                 </child>
                 <child type="suffix">
                   <object class="GtkButton" id="load_button">
-                    <property name="label" translatable="yes">Load</property>
+                    <property name="label" translatable="yes">Refresh</property>
                     <property name="valign">center</property>
                     <property name="css-classes">pill</property>
                     <signal name="clicked" handler="on_load_clicked" object="PhoshHomeAssistantQuickSettingPrefs" swapped="yes"/>
