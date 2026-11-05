@@ -59,7 +59,9 @@ TAG="$(git describe --tags --exact-match 2>/dev/null || true)"
 if [ -n "$TAG" ]; then
   UPSTREAM="${TAG#v}"
 elif [ -n "$SHA" ]; then
-  UPSTREAM="${VERSION_BASE}~g${SHA:0:7}"
+  # ${SHA:0:7} is a bashism; this script runs under dash (debian /bin/sh).
+  SHORT_SHA="$(printf '%s' "$SHA" | cut -c1-7)"
+  UPSTREAM="${VERSION_BASE}~g$SHORT_SHA"
 fi
 VERSION="${UPSTREAM}-1"
 
