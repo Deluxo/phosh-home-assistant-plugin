@@ -24,6 +24,9 @@ jobs:
   build-deb:
     name: arm64 .deb
     runs-on: ubuntu-latest
+    # Cold apt under qemu-user emulation takes ~20+ min; allow plenty of
+    # headroom without risking a 360-min hang.
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -22,14 +22,28 @@ SHA="${PKG_GHA_SHA:-}"
 export DEBIAN_FRONTEND=noninteractive
 
 # --- build deps (Debian trixie) -------------------------------------------
-apt-get update
-apt-get install -y --no-install-recommends \
-  build-essential dpkg-dev file \
-  meson ninja-build pkg-config \
-  phosh-dev libphosh-0.45-dev \
-  libsoup-3.0-dev libadwaita-1-dev libgtk-4-dev libgtk-3-dev \
-  libjson-glib-dev \
-  libglib2.0-bin   # glib-compile-schemas, used by the meson schema test
+# Under qemu-user emulation on CI runners, syscalls are slow and apt can hit
+# transient mirror timeouts; retry a few times before giving up.
+apt_deps() {
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    build-essential dpkg-dev file \
+    meson ninja-build pkg-config \
+    phosh-dev libphosh-0.45-dev \
+    libsoup-3.0-dev libadwaita-1-dev libgtk-4-dev libgtk-3-dev \
+    libjson-glib-dev \
+    libglib2.0-bin   # glib-compile-schemas, used by the meson schema test
+}
+attempt=1
+until apt_deps; do
+  if [ "$attempt" -ge 3 ]; then
+    echo "ERROR: apt-get failed after $attempt attempts" >&2
+    exit 1
+  fi
+  echo "apt attempt $attempt failed, retrying in 30s..." >&2
+  attempt=$((attempt + 1))
+  sleep 30
+done
 
 cd "$SRC"
 
