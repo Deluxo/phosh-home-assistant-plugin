@@ -67,7 +67,20 @@ VERSION="${UPSTREAM}-1"
 
 # --- build + test ----------------------------------------------------------
 meson setup build -Dprefix=/usr
-meson compile -C build
+
+# Under qemu-user emulation the emulated gcc can sporadically segfault on a
+# translation unit (seen on GitHub runners; native ARM is unaffected).
+# Ninja resumes from the last good .o, so retrying makes progress.
+attempt=1
+until meson compile -C build; do
+  if [ "$attempt" -ge 5 ]; then
+    echo "ERROR: meson compile failed after $attempt attempts" >&2
+    exit 1
+  fi
+  echo "compile attempt $attempt failed, retrying..." >&2
+  attempt=$((attempt + 1))
+done
+
 meson test -C build   # validates the gsettings schema
 
 # --- stage install (Debian multiarch layout, libdir picked by meson) -------
