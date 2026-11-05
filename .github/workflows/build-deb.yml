@@ -28,13 +28,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Registers persistent binfmt handlers (qemu-user) for the runner's
+      # Registers persistent binfmt handlers (qemu-user) in the runner's
       # kernel so `docker run --platform linux/arm64` works. The runner
       # ships qemu but no registered handlers, hence "exec format error"
-      # without this step.
+      # without this step. `-p yes` is required: it keeps the interpreter
+      # loaded in the kernel after the setup container exits (without it
+      # the handler points at a file that disappears with the container).
       - name: Set up QEMU
         run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -ap
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Build .deb in native arm64 container
         run: |
