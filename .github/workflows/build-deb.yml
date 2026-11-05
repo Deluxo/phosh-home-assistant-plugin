@@ -1,9 +1,11 @@
 # Builds the phosh Home Assistant quick-setting plugin as an arm64 .deb.
 #
-# The build runs in a native Debian trixie (arm64) container — emulated via
-# qemu on the x86 runner. That produces real ARM64 binaries linked against
-# Debian's own phosh 0.46 / libphosh-0.45 packages, i.e. the same SONAME as
-# on Phosphan/postmarketOS phones, so the .deb works on the device.
+# The build runs natively on a GitHub-hosted arm64 runner (ubuntu-24.04-arm)
+# inside a Debian trixie (arm64) container — no emulation. That produces
+# real ARM64 binaries linked against Debian's own phosh 0.46 / libphosh-0.45
+# packages, i.e. the same SONAME as on Phosphan/postmarketOS phones, so the
+# .deb works on the device. (The ubuntu image itself lacks phosh-dev, hence
+# the trixie container.)
 #
 # If you later run a self-hosted ARM runner, point `runs-on` at its label
 # and invoke `ci/build-deb.sh` directly instead of docker (it is
@@ -23,23 +25,14 @@ permissions:
 jobs:
   build-deb:
     name: arm64 .deb
-    runs-on: ubuntu-latest
-    # Cold apt under qemu-user emulation takes ~20+ min; allow plenty of
-    # headroom without risking a 360-min hang.
-    timeout-minutes: 90
+    # Native arm64 runner (GA since Aug 2025): no qemu emulation, so apt and
+    # gcc run at full speed and the emulated-gcc segfaults under TCG are
+    # impossible. Free for public repos.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Registers persistent binfmt handlers (qemu-user) in the runner's
-      # kernel so `docker run --platform linux/arm64` works. The runner
-      # ships qemu but no registered handlers, hence "exec format error"
-      # without this step. `-p yes` is required: it keeps the interpreter
-      # loaded in the kernel after the setup container exits (without it
-      # the handler points at a file that disappears with the container).
-      - name: Set up QEMU
-        run: |
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Build .deb in native arm64 container
         run: |
